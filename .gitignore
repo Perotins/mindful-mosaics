@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+# Node specific
+frontend/node_modules/
+frontend/build/
+frontend/.env
+
