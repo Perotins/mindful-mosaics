@@ -13,9 +13,17 @@ public class RegistrationCtl {
     @Autowired
     private UserService userService;
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User newUser = userService.registerUser(user);
-        return ResponseEntity.ok(newUser);
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        try {
+            User newUser = userService.registerUser(user);
+            System.out.println("11");
+            // Assuming you have a method in your UserService to handle the registration
+            return ResponseEntity.ok(newUser);
+        } catch (Exception e) {
+            // Handle exceptions such as a user already existing with that email or username
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

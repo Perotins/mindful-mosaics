@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
 import { useNavigate } from 'react-router-dom';
 import './App.css'; // Assuming you want to use styles from App.css
 
@@ -8,13 +10,17 @@ function SignUp() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleRegister = async (event) => {
+    const handleRegister = (event) => {
         event.preventDefault();
-        // Implement your registration logic here
-        // This is where you would connect to your backend to register the user
-        console.log('Register', { email, username, password });
-        // After successful registration, you might want to navigate to the login page
-        // navigate('/');
+        axios.post('http://localhost:8080/api/register', { email, username, password }) // Using relative path thanks to proxy setting
+            .then(response => {
+                console.log('User registered:', response.data);
+                navigate('/'); // Navigate to login page after successful registration
+            })
+            .catch(error => {
+                console.error('Registration failed:', error.response);
+                // Here, you'd handle errors, possibly showing an error message to the user
+            });
     };
 
     return (
