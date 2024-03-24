@@ -2,7 +2,8 @@ package me.perotin.mindfulmosaics.models;
 
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 
 @Entity
 @Table(name = "users")
