@@ -13,8 +13,8 @@ public class RegistrationCtl {
     @Autowired
     private UserService userService;
 
-    @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/register")
+    @CrossOrigin("http://localhost:3000")
+    @RequestMapping(method = RequestMethod.POST, path ="/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             User newUser = userService.registerUser(user);

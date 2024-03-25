@@ -16,11 +16,4 @@ public class MindfulMosaicsApplication {
 
 
 
-
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                // ... other configuration ...
-                .csrf().disable();
-    }
-
 }
