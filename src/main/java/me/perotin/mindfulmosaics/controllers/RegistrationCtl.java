@@ -14,7 +14,7 @@ public class RegistrationCtl {
     private UserService userService;
 
     @CrossOrigin("http://localhost:3000")
-    @RequestMapping(method = RequestMethod.POST, path ="/register")
+    @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             User newUser = userService.registerUser(user);
