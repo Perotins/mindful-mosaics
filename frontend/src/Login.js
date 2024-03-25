@@ -16,7 +16,7 @@ function Login() {
                 console.log(response.data);
                 // If you're using JWT tokens, store it in local storage or state management
                 // localStorage.setItem('token', response.data.token);
-                navigate('/'); // Navigate to the home page or dashboard
+                navigate('/home'); // Navigate to the home page or dashboard
             })
             .catch(error => {
                 console.error('Login failed:', error.response);
