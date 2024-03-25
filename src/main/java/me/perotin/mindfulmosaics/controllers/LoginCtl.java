@@ -1,26 +1,39 @@
 package me.perotin.mindfulmosaics.controllers;
 
+// ... other imports ...
 import me.perotin.mindfulmosaics.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
 public class LoginCtl {
 
-    // Inject your authentication manager, user service, etc. here
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-//        // Perform authentication
-//        // Return a JWT or session token as needed
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        user.getPassword()
+                )
+        );
 
-//    @PostMapping("/register")
-//    public ResponseEntity<?> register(@RequestBody User user) {
-//        // Handle registration
-//    }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    // Other methods if needed
+        // Here you would return the JWT or some token to maintain the session
+        return ResponseEntity.ok().body("User authenticated successfully!");
+    }
+
+    // Your other methods ...
 }
