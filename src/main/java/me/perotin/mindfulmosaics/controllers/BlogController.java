@@ -48,6 +48,8 @@ public class BlogController {
             blog.setUser(user);
         } else {
             // Handle the case where the principal is not an instance of UserDetails
+            String username = principal.toString();
+            System.out.println(username);
         }
 
         Blog savedBlog = blogRepository.save(blog);

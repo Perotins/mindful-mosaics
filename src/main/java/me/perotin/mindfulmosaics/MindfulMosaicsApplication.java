@@ -1,9 +1,14 @@
 package me.perotin.mindfulmosaics;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
@@ -17,6 +22,8 @@ import java.util.Arrays;
 @SpringBootApplication
 public class MindfulMosaicsApplication {
 
+    @Autowired
+    private UserDetailsService userDetailsService;
     public static void main(String[] args) {
 
 
@@ -58,10 +65,18 @@ public class MindfulMosaicsApplication {
 //                .httpBasic(withDefaults());
         System.out.println("Configuring HttpSecurity");
         http
+                .cors().and().csrf().disable()
+
 //                .csrf(csrf -> csrf
 //                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Use a cookie for CSRF
 //                )
-                .cors().and().csrf().disable()
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults());
+
+        // Configure AuthenticationManager with UserDetailsService and PasswordEncoder
+        http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());
 
         // rest of your configuration...
         ;
