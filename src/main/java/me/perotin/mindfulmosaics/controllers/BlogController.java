@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api")
 public class BlogController {
@@ -56,5 +58,13 @@ public class BlogController {
         return ResponseEntity.ok(savedBlog);
     }
 
-    // Additional methods for listing, updating, deleting blogs
+
+    @GetMapping("/{userId}/{title}")
+    public ResponseEntity<Blog> getBlogByUsernameAndTitle(@PathVariable long userId, @PathVariable String title) {
+        Optional<Blog> blog = blogRepository.findBlogByUserIdAndTitle(userId, title);
+        return blog.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
 }

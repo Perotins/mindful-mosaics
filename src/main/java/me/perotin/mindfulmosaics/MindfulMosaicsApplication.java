@@ -71,6 +71,7 @@ public class MindfulMosaicsApplication {
 //                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Use a cookie for CSRF
 //                )
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+
                 .httpBasic(Customizer.withDefaults());
 
         // Configure AuthenticationManager with UserDetailsService and PasswordEncoder

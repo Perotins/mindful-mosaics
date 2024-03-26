@@ -4,6 +4,7 @@ import Login from './Login';
 import SignUp from './SignUp';
 import Home from './Home';
 import CreateBlog from "./CreateBlog"; // Import the Home component
+import BlogPage from './BlogPage'; // Import the BlogPage component
 
 
 
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<Login />} />
               <Route path="/home" element={<Home />} />
               <Route path="/create-blog" element={<CreateBlog />} />
+              <Route path="/:userId/:title" element={<BlogPage />} /> {/* Step 4: Route for individual blog pages */}
 
           </Routes>
         </div>
