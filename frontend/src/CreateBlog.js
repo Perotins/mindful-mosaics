@@ -7,19 +7,26 @@ function CreateBlog() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
+    const navigate = useNavigate();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            console.log("123")
             // Adjust URL and add authorization headers as necessary
             const response = await axios.post('http://localhost:8080/api/create-blog', { title, content }, { withCredentials: true });
             console.log(response.data);
-            const navigate = useNavigate();
+            console.log("323")
+
+            console.log("456") // NOT PRINTING THIS LINE, assuming navigate is causing an error
 
             // Redirect or show success message
-            const { userId, blogTitle } = response.data; // Adjust these fields based on your actual API response
+            const { user: { id: userId } } = response.data;
+
+            console.log("userId = " + userId + " blogTitle= " + title)
 
             // Navigate to the newly created blog
-            navigate(`/${userId}/${blogTitle}`); // Adjust the path as necessary
+            navigate(`/${userId}/${title}`); // Adjust the path as necessary
 
         } catch (error) {
             console.error("Error creating blog", error.response);
