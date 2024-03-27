@@ -22,6 +22,15 @@ public class LoginCtl {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
+        // Check if a user is already authenticated and clear the context if so
+        if (SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+
+            // This manually logs out the user
+            SecurityContextHolder.getContext().setAuthentication(null);
+        }
+
+        // Process the new user's login
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
@@ -34,6 +43,7 @@ public class LoginCtl {
         // Here you would return the JWT or some token to maintain the session
         return ResponseEntity.ok().body("User authenticated successfully!");
     }
+
 
     // Your other methods ...
 }

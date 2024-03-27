@@ -7,6 +7,7 @@ import me.perotin.mindfulmosaics.repositories.BlogRepository;
 import me.perotin.mindfulmosaics.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -70,6 +71,25 @@ public class BlogController {
         return blog.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+
+    @GetMapping("/user-blogs")
+    public ResponseEntity<List<Blog>> getUserBlogs() {
+        // Retrieve the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        System.out.println("Current username: " + currentUsername);
+        // Find the user by username
+        User user = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + currentUsername));
+
+        // Get the blogs for the authenticated user
+        List<Blog> userBlogs = blogRepository.findAllByUser(user);
+        userBlogs.forEach(b -> System.out.println(b.getTitle()));
+        return ResponseEntity.ok(userBlogs);
+    }
+
 
 
 }

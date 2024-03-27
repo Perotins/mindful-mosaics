@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login';
 import SignUp from './SignUp';
-import Home from './Home';
-import CreateBlog from "./CreateBlog"; // Import the Home component
-import BlogPage from './BlogPage'; // Import the BlogPage component
-import ViewBlogs from './ViewBlogs'; // Import the new component
+import Home from './pages/Home/Home';
+import CreateBlog from './pages/CreateBlog/CreateBlog';
+import BlogPage from './pages/BlogPage/BlogPage';
+import ViewBlogs from './pages/ViewBlogs/ViewBlogs';
+
 
 
 

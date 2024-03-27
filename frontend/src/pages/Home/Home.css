@@ -1,0 +1,29 @@
+/* Home.css */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-header {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.user-blogs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* This will create a responsive grid */
+    gap: 20px; /* Space between grid items */
+    width: 100%; /* Full width */
+    padding: 0 10px; /* Padding on the sides */
+}
+
+.blog-entry {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}

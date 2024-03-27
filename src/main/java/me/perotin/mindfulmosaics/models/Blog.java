@@ -14,6 +14,7 @@ public class Blog {
     private User user; // Assuming you have a User entity
 
     private String title;
+    @Column(columnDefinition="LONGTEXT")
     private String content;
 
     public Long getId() {
