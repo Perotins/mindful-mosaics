@@ -14,8 +14,9 @@ function BlogPage() {
     };
 
     const editBlog = () => {
-        navigate('/api/${userId}/${title}')
+        navigate(`/update-blog/${userId}/${title}`);
     }
+
 
     useEffect(() => {
         axios.get(`http://localhost:8080/api/${userId}/${title}`, {

@@ -6,6 +6,7 @@ import me.perotin.mindfulmosaics.models.User;
 import me.perotin.mindfulmosaics.repositories.BlogRepository;
 import me.perotin.mindfulmosaics.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -89,6 +90,30 @@ public class BlogController {
         userBlogs.forEach(b -> System.out.println(b.getTitle()));
         return ResponseEntity.ok(userBlogs);
     }
+
+    @PutMapping("/update-blog/{userId}/{title}")
+    public ResponseEntity<?> updateBlog(@PathVariable long userId, @PathVariable String title, @RequestBody String content) {
+        // Find the blog by user ID and title (consider adding additional checks for user authentication)
+        Optional<Blog> blogOptional = blogRepository.findBlogByUserIdAndTitle(userId, title);
+
+        if (blogOptional.isEmpty()) {
+            return new ResponseEntity<>("Blog not found", HttpStatus.NOT_FOUND);
+        }
+
+        Blog blog = blogOptional.get();
+
+        // Additional security checks can be added here to ensure the correct user is updating the blog
+
+        // Update the content of the blog
+        blog.setContent(content);
+
+        // Save the updated blog
+        blogRepository.save(blog);
+
+        // Return the updated blog
+        return new ResponseEntity<>(blog, HttpStatus.OK);
+    }
+
 
 
 
