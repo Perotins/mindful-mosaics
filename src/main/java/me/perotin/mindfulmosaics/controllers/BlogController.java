@@ -1,6 +1,7 @@
 package me.perotin.mindfulmosaics.controllers;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import me.perotin.mindfulmosaics.dto.BlogContentDTO;
 import me.perotin.mindfulmosaics.models.Blog;
 import me.perotin.mindfulmosaics.models.User;
 import me.perotin.mindfulmosaics.repositories.BlogRepository;
@@ -92,20 +93,18 @@ public class BlogController {
     }
 
     @PutMapping("/update-blog/{userId}/{title}")
-    public ResponseEntity<?> updateBlog(@PathVariable long userId, @PathVariable String title, @RequestBody String content) {
-        // Find the blog by user ID and title (consider adding additional checks for user authentication)
+    public ResponseEntity<?> updateBlog(@PathVariable long userId, @PathVariable String title, @RequestBody BlogContentDTO blogContentDTO) {
+        // Find the blog by user ID and title
         Optional<Blog> blogOptional = blogRepository.findBlogByUserIdAndTitle(userId, title);
 
-        if (blogOptional.isEmpty()) {
+        if (!blogOptional.isPresent()) {
             return new ResponseEntity<>("Blog not found", HttpStatus.NOT_FOUND);
         }
 
         Blog blog = blogOptional.get();
 
-        // Additional security checks can be added here to ensure the correct user is updating the blog
-
         // Update the content of the blog
-        blog.setContent(content);
+        blog.setContent(blogContentDTO.getContent());
 
         // Save the updated blog
         blogRepository.save(blog);
@@ -113,6 +112,20 @@ public class BlogController {
         // Return the updated blog
         return new ResponseEntity<>(blog, HttpStatus.OK);
     }
+
+
+    @DeleteMapping("/{userId}/{title}")
+    public ResponseEntity<?> deleteBlog(@PathVariable long userId, @PathVariable String title) {
+        Optional<Blog> blog = blogRepository.findBlogByUserIdAndTitle(userId, title);
+        if (blog.isPresent()) {
+            blogRepository.delete(blog.get());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
 
 

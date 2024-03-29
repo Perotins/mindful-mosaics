@@ -17,6 +17,18 @@ function BlogPage() {
         navigate(`/update-blog/${userId}/${title}`);
     }
 
+    const deleteBlog = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/api/${userId}/${title}`, {
+                withCredentials: true
+            });
+            navigate('/home'); // Redirect to home after deletion
+        } catch (error) {
+            console.error("Error deleting blog", error);
+            // Show error message
+        }
+    };
+
 
     useEffect(() => {
         axios.get(`http://localhost:8080/api/${userId}/${title}`, {
@@ -35,6 +47,7 @@ function BlogPage() {
             <h2>{blog.title}</h2>
             <p>{blog.content}</p>
             <button onClick={editBlog}>Edit Blog</button>
+            <button onClick={deleteBlog}>Delete Blog</button>
 
             <button onClick={returnToHome}>Home</button>
 
