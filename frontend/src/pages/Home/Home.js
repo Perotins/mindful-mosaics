@@ -8,9 +8,10 @@ function Home() {
     const [userBlogs, setUserBlogs] = useState([]);
     const navigate = useNavigate();
 
+
     useEffect(() => {
         // Fetch blogs created by the user
-        axios.get('http://localhost:8080/api/user-blogs', { withCredentials: true })
+          axios.get('http://localhost:8080/api/user-blogs', { withCredentials: true })
             .then(response => {
                 setUserBlogs(response.data);
             })
@@ -20,6 +21,8 @@ function Home() {
         // You might need to adjust the API endpoint above
     }, []);
 
+
+
     const handleCreateBlog = () => {
         navigate('/create-blog');
     };
@@ -27,6 +30,13 @@ function Home() {
     const handleViewBlogs = () => {
         navigate('/view-blogs');
     };
+
+    // Function to navigate to the blog's detail page
+    const navigateToBlog = (userId, title) => {
+        // Use encodeURIComponent to ensure special characters in title are correctly handled
+        navigate(`/${userId}/${encodeURIComponent(title)}`);
+    };
+
 
     return (
         <div className="home-container">
@@ -36,7 +46,7 @@ function Home() {
             </div>
             <div className="user-blogs">
                 {userBlogs.map(blog => (
-                    <div key={blog.id} className="blog-entry">
+                    <div key={blog.id} className="blog-entry" onClick={() => navigateToBlog(blog.user.id, blog.title)}>
                         <h3>{blog.title}</h3>
                         <p>{blog.content}</p>
                     </div>
