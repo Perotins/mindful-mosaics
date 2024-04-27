@@ -93,7 +93,7 @@ function ViewBlogs() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:8080/api/blogs', { withCredentials: true }) // Adjust to your API
+        axios.get('http://localhost:8080/api/blogs', { withCredentials: true })
             .then(response => {
                 setBlogs(response.data);
             })
@@ -103,10 +103,9 @@ function ViewBlogs() {
     }, []);
 
     const handleBack = () => {
-        navigate(-1); // Go back to the previous page
+        navigate(-1);
     };
 
-    // Filter blogs based on search term and author
     const filteredBlogs = blogs.filter(blog => {
         const titleMatch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
         const authorMatch = blog.user.username.toLowerCase().includes(author.toLowerCase()); // Adjust according to your data structure
@@ -133,7 +132,7 @@ function ViewBlogs() {
                     <div key={blog.id} className="blog-card" onClick={() => navigate(`/${blog.user.id}/${blog.title}`)}>
                         <div className="blog-title">{blog.title}</div>
                         <div className="blog-author">{blog.user.username}</div>
-                        <div className="blog-content">{blog.content}</div>
+                        {/*<div className="blog-content">{blog.content}</div>*/}
                     </div>
                 ))}
             </div>

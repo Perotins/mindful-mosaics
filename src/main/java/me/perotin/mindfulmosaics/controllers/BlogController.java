@@ -45,15 +45,12 @@ public class BlogController {
         System.out.println(principal.getClass().getName()); // Check the actual class of the principal
         if (principal instanceof UserDetails) {
             String username = ((UserDetails) principal).getUsername();
-            // Use the username to find the User entity
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-            // Set the user as the author of the blog
             System.out.println("User is: " + user.getUsername() + " with ID " + user.getId());
             blog.setUser(user);
         } else {
-            // Handle the case where the principal is not an instance of UserDetails
             String username = principal.toString();
             System.out.println(username);
         }
@@ -77,16 +74,13 @@ public class BlogController {
 
     @GetMapping("/user-blogs")
     public ResponseEntity<List<Blog>> getUserBlogs() {
-        // Retrieve the currently authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 
         System.out.println("Current username: " + currentUsername);
-        // Find the user by username
         User user = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + currentUsername));
 
-        // Get the blogs for the authenticated user
         List<Blog> userBlogs = blogRepository.findAllByUser(user);
         userBlogs.forEach(b -> System.out.println(b.getTitle()));
         return ResponseEntity.ok(userBlogs);
@@ -94,7 +88,6 @@ public class BlogController {
 
     @PutMapping("/update-blog/{userId}/{title}")
     public ResponseEntity<?> updateBlog(@PathVariable long userId, @PathVariable String title, @RequestBody BlogContentDTO blogContentDTO) {
-        // Find the blog by user ID and title
         Optional<Blog> blogOptional = blogRepository.findBlogByUserIdAndTitle(userId, title);
 
         if (!blogOptional.isPresent()) {
@@ -103,13 +96,10 @@ public class BlogController {
 
         Blog blog = blogOptional.get();
 
-        // Update the content of the blog
         blog.setContent(blogContentDTO.getContent());
 
-        // Save the updated blog
         blogRepository.save(blog);
 
-        // Return the updated blog
         return new ResponseEntity<>(blog, HttpStatus.OK);
     }
 

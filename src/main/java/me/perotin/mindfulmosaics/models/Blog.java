@@ -2,8 +2,13 @@ package me.perotin.mindfulmosaics.models;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 
 @Entity
+@Table(indexes = {
+        @Index(columnList = "dateCreated", name = "idx_blog_date_created")
+})
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +21,14 @@ public class Blog {
     private String title;
     @Column(columnDefinition="LONGTEXT")
     private String content;
+
+    @Column(name = "date_created")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreated;
+
+
+    @Column(name = "word_count")
+    private Integer wordCount;
 
     public Long getId() {
         return id;
@@ -39,5 +52,18 @@ public class Blog {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+
+    @PrePersist
+    protected void onCreate() {
+        dateCreated = new Date();
+    }
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    protected void onLoadOrUpdate() {
+        wordCount = content != null ? content.split("\\s+").length : 0;
     }
 }
