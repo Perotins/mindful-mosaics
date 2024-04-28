@@ -30,6 +30,24 @@ public class Blog {
     @Column(name = "word_count")
     private Integer wordCount;
 
+    private int likes;
+
+
+
+    // Getters and setters for the likes field
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    // Increment likes method
+    public void incrementLikes() {
+        this.likes++;
+    }
+
     public Long getId() {
         return id;
     }

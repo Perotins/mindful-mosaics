@@ -9,17 +9,55 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_blog_count", columnList = "blogCount"),
+        @Index(name = "idx_last_login", columnList = "lastLoginDate")
+})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginDate;
+
     private String username;
     private String password; // Store encrypted passwords only
+    private Integer blogCount = 0;
+    private String countryLocation; // Store the country location of the user
+
+
+
+    public String getCountryLocation() {
+        return countryLocation;
+    }
+
+    public void setCountryLocation(String countryLocation) {
+        this.countryLocation = countryLocation;
+    }
+
+
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    public Integer getBlogCount() {
+        return blogCount;
+    }
+
+    public void setBlogCount(Integer blogCount) {
+        this.blogCount = blogCount;
+    }
+
+
 
     public void setId(Long id) {
         this.id = id;
