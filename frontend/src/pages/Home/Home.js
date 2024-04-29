@@ -31,6 +31,11 @@ function Home() {
         navigate('/view-blogs');
     };
 
+    const handleGenerateReport = () => {
+        navigate('/reports'); // Assuming '/reports' is your report page's route
+    };
+
+
     // Function to navigate to the blog's detail page
     const navigateToBlog = (userId, title) => {
         // Use encodeURIComponent to ensure special characters in title are correctly handled
@@ -43,6 +48,8 @@ function Home() {
             <div className="home-header">
                 <button onClick={handleCreateBlog}>Create New Blog</button>
                 <button onClick={handleViewBlogs}>View Blogs</button>
+                <button onClick={handleGenerateReport}>Generate Report</button> {/* Add this line */}
+
             </div>
             <div className="user-blogs">
                 {userBlogs.map(blog => (

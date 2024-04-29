@@ -5,8 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class ReportService {
@@ -14,50 +13,40 @@ public class ReportService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Map<String, Object> generateReport(String timeFrame) {
+    public int getBlogsCreatedWithin(String timeFrame) {
         LocalDateTime endTime = LocalDateTime.now();
-        LocalDateTime startTime = calculateStartTime(timeFrame, endTime);
+        LocalDateTime startTime = getStartTimeBasedOnTimeFrame(timeFrame, endTime);
 
-        String usersQuery = "SELECT COUNT(*) FROM users WHERE created_at BETWEEN ? AND ?";
-        String blogsQuery = "SELECT COUNT(*) FROM blog WHERE date_created BETWEEN ? AND ?";
-        String likesQuery = "SELECT SUM(likes) FROM blog WHERE date_created BETWEEN ? AND ?";
-
-        int usersRegistered = jdbcTemplate.queryForObject(usersQuery, new Object[]{startTime, endTime}, Integer.class);
-        int blogsCreated = jdbcTemplate.queryForObject(blogsQuery, new Object[]{startTime, endTime}, Integer.class);
-        int totalLikes = jdbcTemplate.queryForObject(likesQuery, new Object[]{startTime, endTime}, Integer.class);
-
-        // You'll need to implement getAverageBlogLength() and other methods for missing data
-        int averageBlogLength = getAverageBlogLength(startTime, endTime);
-
-        Map<String, Object> report = new HashMap<>();
-        report.put("Time span", timeFrame);
-        report.put("Users registered", usersRegistered);
-        report.put("Blogs created", blogsCreated);
-        report.put("Total likes", totalLikes);
-        report.put("Average blog length", averageBlogLength);
-        // Add more fields as per your actual schema and data
-
-        return report;
+        String sql = "SELECT COUNT(*) FROM blog WHERE date_created BETWEEN ? AND ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{startTime, endTime}, Integer.class);
     }
 
-    private LocalDateTime calculateStartTime(String timeFrame, LocalDateTime endTime) {
+    public int getUsersRegisteredWithin(String timeFrame) {
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime startTime = getStartTimeBasedOnTimeFrame(timeFrame, endTime);
+
+        String sql = "SELECT COUNT(*) FROM users WHERE created_at BETWEEN ? AND ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{startTime, endTime}, Integer.class);
+    }
+
+    public int getLikesWithin(String timeFrame) {
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime startTime = getStartTimeBasedOnTimeFrame(timeFrame, endTime);
+
+        String sql = "SELECT COUNT(*) FROM likes WHERE liked_at BETWEEN ? AND ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{startTime, endTime}, Integer.class);
+    }
+
+    private LocalDateTime getStartTimeBasedOnTimeFrame(String timeFrame, LocalDateTime endTime) {
         switch (timeFrame) {
-            case "1 day":
-                return endTime.minusDays(1);
-            case "1 week":
-                return endTime.minusWeeks(1);
-            case "1 month":
-                return endTime.minusMonths(1);
+            case "1day":
+                return endTime.minus(1, ChronoUnit.DAYS);
+            case "1week":
+                return endTime.minus(1, ChronoUnit.WEEKS);
+            case "1month":
+                return endTime.minus(1, ChronoUnit.MONTHS);
             default:
-                throw new IllegalArgumentException("Invalid time frame");
+                throw new IllegalArgumentException("Invalid time frame specified");
         }
     }
-
-    private int getAverageBlogLength(LocalDateTime startTime, LocalDateTime endTime) {
-        // Example query to calculate average length of blogs
-        String avgLengthQuery = "SELECT AVG(LENGTH(content)) FROM blog WHERE date_created BETWEEN ? AND ?";
-        return jdbcTemplate.queryForObject(avgLengthQuery, new Object[]{startTime, endTime}, Integer.class);
-    }
-
-    // Additional methods to retrieve other information for the report
 }

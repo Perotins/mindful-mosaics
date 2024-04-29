@@ -7,6 +7,8 @@ import CreateBlog from './pages/CreateBlog/CreateBlog';
 import BlogPage from './pages/BlogPage/BlogPage';
 import ViewBlogs from './pages/ViewBlogs/ViewBlogs';
 import EditBlog from './pages/EditBlog/EditBlog';
+import Reports from './pages/Reports/Reports';
+
 
 
 
@@ -25,6 +27,7 @@ function App() {
               <Route path="/:userId/:title" element={<BlogPage />} /> {/* Step 4: Route for individual blog pages */}
               <Route path="/view-blogs" element={<ViewBlogs />} />
               <Route path="/update-blog/:userId/:title" element={<EditBlog />} />
+              <Route path="/reports" element={<Reports />} />
 
 
           </Routes>
