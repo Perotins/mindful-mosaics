@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/reports")
 public class ReportController {
 
     @Autowired
     private ReportService reportService;
 
-    @GetMapping("/{timeFrame}")
-    public ResponseEntity<Report> generateReport(@PathVariable String timeFrame) {
+    @GetMapping
+    public ResponseEntity<Report> generateReport(@RequestParam String timeFrame) {
         int blogsCount = reportService.getBlogsCreatedWithin(timeFrame);
         int usersCount = reportService.getUsersRegisteredWithin(timeFrame);
         int likesCount = reportService.getLikesWithin(timeFrame);

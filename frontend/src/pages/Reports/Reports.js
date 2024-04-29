@@ -1,32 +1,47 @@
-// Reports.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './Reports.css'; // Ensure the CSS is properly set up
 
-function Reports() {
-    const navigate = useNavigate();
-    const [duration, setDuration] = useState('1day'); // Default selection
+function ReportsDisplay() {
+    const [timeFrame, setTimeFrame] = useState('1day'); // Use the same time frame keys as in your backend
+    const [reportData, setReportData] = useState(null);
 
-    const handleDurationChange = (event) => {
-        setDuration(event.target.value);
+    const handleTimeFrameChange = (event) => {
+        setTimeFrame(event.target.value);
     };
 
-    const handleGenerateClick = () => {
-        console.log(`Generating report for: ${duration}`);
-        // Here you would call your backend service to generate the report
+    const generateReport = () => {
+        // Correct endpoint with query parameter
+        axios.get(`http://localhost:8080/api/reports?timeFrame=${encodeURIComponent(timeFrame)}`, { withCredentials: true })
+            .then(response => {
+                setReportData(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching report:', error);
+            });
     };
+
 
     return (
-        <div>
+        <div className="report-container">
             <h2>Generate Report</h2>
-            <select value={duration} onChange={handleDurationChange}>
-                <option value="1day">1 Day</option>
-                <option value="1week">1 Week</option>
-                <option value="1month">1 Month</option>
+            <select value={timeFrame} onChange={handleTimeFrameChange}>
+                <option value="1day">Last Day</option>
+                <option value="1week">Last Week</option>
+                <option value="1month">Last Month</option>
             </select>
-            <button onClick={handleGenerateClick}>Generate</button>
-            <button onClick={() => navigate('/home')}>Back to Home</button>
+            <button onClick={generateReport}>Generate Report</button>
+
+            {reportData && (
+                <div className="report-results">
+                    <h3>Report Results</h3>
+                    <p>Users registered: {reportData.usersRegistered}</p>
+                    <p>Blogs created: {reportData.blogsCreated}</p>
+                    <p>Blogs liked: {reportData.blogsLiked}</p>
+                </div>
+            )}
         </div>
     );
 }
 
-export default Reports;
+export default ReportsDisplay;
