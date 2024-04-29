@@ -33,6 +33,17 @@ public class Blog {
     private int likes;
 
 
+    public void setWordCount(Integer wordCount) {
+        this.wordCount = wordCount;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public Integer getWordCount() {
+        return wordCount;
+    }
 
     // Getters and setters for the likes field
     public int getLikes() {

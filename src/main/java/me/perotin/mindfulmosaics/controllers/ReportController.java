@@ -23,8 +23,13 @@ public class ReportController {
         int blogsCount = reportService.getBlogsCreatedWithin(timeFrame);
         int usersCount = reportService.getUsersRegisteredWithin(timeFrame);
         int likesCount = reportService.getLikesWithin(timeFrame);
+        int blogsDeleted = reportService.getBlogsDeletedWithin(timeFrame);
+        double averageBlogLength = reportService.getAverageBlogLengthCreatedWithin(timeFrame);
+        int tagsCreated = reportService.getTagsCreatedWithin(timeFrame);
+        String mostUsed = reportService.getMostUsedTagNameWithin(timeFrame);
 
-        Report report = new Report(blogsCount, usersCount, likesCount);
+        System.out.println("Blogs deleted: " + blogsDeleted);
+        Report report = new Report(usersCount, blogsCount, likesCount, blogsDeleted, averageBlogLength, tagsCreated, mostUsed);
         return ResponseEntity.ok(report);
     }
 }

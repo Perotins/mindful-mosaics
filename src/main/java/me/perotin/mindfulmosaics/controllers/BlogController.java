@@ -5,10 +5,13 @@ import jakarta.persistence.EntityNotFoundException;
 import me.perotin.mindfulmosaics.dto.BlogContentDTO;
 import me.perotin.mindfulmosaics.models.Blog;
 import me.perotin.mindfulmosaics.models.Like;
+import me.perotin.mindfulmosaics.models.Tag;
 import me.perotin.mindfulmosaics.models.User;
 import me.perotin.mindfulmosaics.repositories.BlogRepository;
 import me.perotin.mindfulmosaics.repositories.LikeRepository;
+import me.perotin.mindfulmosaics.repositories.TagRepository;
 import me.perotin.mindfulmosaics.repositories.UserRepository;
+import me.perotin.mindfulmosaics.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +39,12 @@ public class BlogController {
     @Autowired
     private LikeRepository likeRepository;
 
+    @Autowired
+    private BlogService blogService;
+
+
+    @Autowired
+    private TagRepository tagRepository;
 
 //    @PostMapping("/create-blog")
 //    public ResponseEntity<Blog> createBlog(@RequestBody Blog blog) {
@@ -63,6 +72,8 @@ public class BlogController {
             System.out.println(username);
         }
 
+
+        blog.setWordCount(blog.getContent().split(" ").length);
         Blog savedBlog = blogRepository.save(blog);
         return ResponseEntity.ok(savedBlog);
     }
@@ -106,6 +117,17 @@ public class BlogController {
 
         blog.setContent(blogContentDTO.getContent());
 
+        if (blogContentDTO.getTag() != null && !blogContentDTO.getTag().isEmpty()) {
+            Tag tag = tagRepository.findByBlogAndName(blog, blogContentDTO.getTag())
+                    .orElse(new Tag()); // If tag does not exist, create a new one
+
+            tag.setName(blogContentDTO.getTag());
+            tag.setBlog(blog); // Set the blog
+            tag.setCreatedAt(new Date());
+            tagRepository.save(tag); // Save the tag
+        }
+
+
         blogRepository.save(blog);
 
         return new ResponseEntity<>(blog, HttpStatus.OK);
@@ -116,7 +138,9 @@ public class BlogController {
     public ResponseEntity<?> deleteBlog(@PathVariable long userId, @PathVariable String title) {
         Optional<Blog> blog = blogRepository.findBlogByUserIdAndTitle(userId, title);
         if (blog.isPresent()) {
-            blogRepository.delete(blog.get());
+
+            blogService.deleteBlog(blog.get().getId(), userId);
+            //blogRepository.delete(blog.get());
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

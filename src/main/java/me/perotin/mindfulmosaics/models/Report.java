@@ -5,14 +5,59 @@ public class Report {
     private int blogsCreated;
     private int blogsLiked;
 
-    public Report(int usersRegistered, int blogsCreated, int blogsLiked) {
+    private int blogsDeleted;
+    private double averageBlogLength;
+
+    private int tagsCreated;
+    private String mostUsedTag;
+
+    public Report(int usersRegistered, int blogsCreated, int blogsLiked, int blogsDeleted, double averageLength, int tagsCreated, String mostUsed) {
         this.usersRegistered = usersRegistered;
         this.blogsCreated = blogsCreated;
         this.blogsLiked = blogsLiked;
+        this.blogsDeleted = blogsDeleted;
+        this.blogsCreated = blogsDeleted;
+        this.averageBlogLength = averageLength;
+        this.tagsCreated = tagsCreated;
+        this.mostUsedTag = mostUsed;
+    }
+
+    public double getAverageBlogLength() {
+        return averageBlogLength;
+    }
+
+    public void setAverageBlogLength(double averageBlogLength) {
+        this.averageBlogLength = averageBlogLength;
+    }
+
+    public int getTagsCreated() {
+        return tagsCreated;
+    }
+
+    public void setTagsCreated(int tagsCreated) {
+        this.tagsCreated = tagsCreated;
+    }
+
+    public String getMostUsedTag() {
+        return mostUsedTag;
+    }
+
+
+
+    public void setMostUsedTag(String mostUsedTag) {
+        this.mostUsedTag = mostUsedTag;
     }
 
     public int getUsersRegistered() {
         return usersRegistered;
+    }
+
+    public int getBlogsDeleted() {
+        return blogsDeleted;
+    }
+
+    public void setBlogsDeleted(int blogsDeleted) {
+        this.blogsDeleted = blogsDeleted;
     }
 
     public int getBlogsCreated() {

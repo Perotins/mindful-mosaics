@@ -38,6 +38,10 @@ function ReportsDisplay() {
                     <p>Users registered: {reportData.usersRegistered}</p>
                     <p>Blogs created: {reportData.blogsCreated}</p>
                     <p>Blogs liked: {reportData.blogsLiked}</p>
+                    <p>Blogs deleted: {reportData.blogsDeleted}</p>
+                    <p>Average Blog Length: {reportData.averageBlogLength} words</p>
+                    <p>Tags created: {reportData.tagsCreated} tags</p>
+                    <p>Most used tag: #{reportData.mostUsedTag}</p>
                 </div>
             )}
         </div>
