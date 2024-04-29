@@ -51,6 +51,20 @@ public class MindfulMosaicsApplication {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http
+                .cors().and().csrf().disable()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/register").permitAll() // Allow public access to the register endpoint
+                        .anyRequest().authenticated() // All other requests need to be authenticated
+                )
+                .httpBasic(Customizer.withDefaults());
+
+        // Configure AuthenticationManager with UserDetailsService and PasswordEncoder
+        http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());
+
 //        http
 //                // Apply CORS configuration
 //                .cors().configurationSource(corsConfigurationSource())
@@ -64,20 +78,22 @@ public class MindfulMosaicsApplication {
 //                // Use httpBasic authentication
 //                .httpBasic(withDefaults());
         System.out.println("Configuring HttpSecurity");
-        http
-                .cors().and().csrf().disable()
+//        http
+//                .cors().and().csrf().disable()
+//
+////                .csrf(csrf -> csrf
+////                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Use a cookie for CSRF
+////                )
+//                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+//
+//                .httpBasic(Customizer.withDefaults());
 
-//                .csrf(csrf -> csrf
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // Use a cookie for CSRF
-//                )
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
 
-                .httpBasic(Customizer.withDefaults());
 
         // Configure AuthenticationManager with UserDetailsService and PasswordEncoder
-        http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder());
+//        http.getSharedObject(AuthenticationManagerBuilder.class)
+//                .userDetailsService(userDetailsService)
+//                .passwordEncoder(new BCryptPasswordEncoder());
 
         // rest of your configuration...
         ;

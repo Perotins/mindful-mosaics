@@ -1,10 +1,13 @@
 package me.perotin.mindfulmosaics.controllers;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import jakarta.persistence.EntityNotFoundException;
 import me.perotin.mindfulmosaics.dto.BlogContentDTO;
 import me.perotin.mindfulmosaics.models.Blog;
+import me.perotin.mindfulmosaics.models.Like;
 import me.perotin.mindfulmosaics.models.User;
 import me.perotin.mindfulmosaics.repositories.BlogRepository;
+import me.perotin.mindfulmosaics.repositories.LikeRepository;
 import me.perotin.mindfulmosaics.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +32,9 @@ public class BlogController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
 
 
 //    @PostMapping("/create-blog")
@@ -114,6 +122,33 @@ public class BlogController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/blogs/{blogId}/like")
+    public ResponseEntity<?> likeBlog(@PathVariable Long blogId, Principal principal) {
+        // Find the user by username
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + principal.getName()));
+
+        // Find the blog by blogId
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new EntityNotFoundException("Blog not found with id: " + blogId));
+
+        // Create a new Like instance
+        Like like = new Like();
+        like.setUser(user);
+        like.setBlog(blog);
+        like.setLikedAt(new Date());
+
+        // Save the like
+        likeRepository.save(like);
+
+        // Increment the likes count in the Blog entity
+        blog.setLikes(blog.getLikes() + 1);
+        blogRepository.save(blog);
+
+        return ResponseEntity.ok().build();
+    }
+
 
 
 

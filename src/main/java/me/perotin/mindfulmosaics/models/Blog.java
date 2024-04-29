@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 @Table(indexes = {
-        @Index(columnList = "dateCreated", name = "idx_blog_date_created")
+        @Index(columnList = "date_created", name = "idx_blog_date_created")
 })
 public class Blog {
     @Id

@@ -17,6 +17,21 @@ function BlogPage() {
         navigate(`/update-blog/${userId}/${title}`);
     }
 
+    const likeBlog = async () => {
+        try {
+            const response = await axios.post(`http://localhost:8080/api/blogs/${blog.id}/like`, {}, {
+                withCredentials: true
+            });
+            if (response.status === 200) {
+                setBlog({ ...blog, likes: blog.likes + 1 }); // Update the likes count in the state
+            }
+        } catch (error) {
+            console.error("Error liking blog", error);
+            // Show error message
+        }
+    };
+
+
     const deleteBlog = async () => {
         try {
             await axios.delete(`http://localhost:8080/api/${userId}/${title}`, {
@@ -46,6 +61,10 @@ function BlogPage() {
         <div>
             <h2>{blog.title}</h2>
             <p>{blog.content}</p>
+            <div>Likes: {blog.likes}</div>
+
+            <button onClick={likeBlog}>Like Blog</button>
+
             <button onClick={editBlog}>Edit Blog</button>
             <button onClick={deleteBlog}>Delete Blog</button>
 
